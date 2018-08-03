@@ -17,6 +17,7 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->scalarNode('enable')->defaultTrue()->end()
                 ->arrayNode('notifier')
                 ->isRequired()
                     ->children()

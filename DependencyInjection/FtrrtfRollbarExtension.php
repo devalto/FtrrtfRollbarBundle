@@ -19,6 +19,10 @@ class FtrrtfRollbarExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
+        if (false == $config['enable']) {
+            return;
+        }
+
         if (isset($config['notifier'])) {
             $loader->load('services.xml');
             $container->setParameter('ftrrtf_rollbar.environment.options', $config['environment']);
