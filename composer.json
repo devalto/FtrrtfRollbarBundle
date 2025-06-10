@@ -15,7 +15,7 @@
         "symfony/framework-bundle": "^2.7.3|^3.0|^4.0",
         "symfony/security-bundle": "^2.7.3|^3.0|^4.0",
         "symfony/expression-language": "^2.7.3|^3.0|^4.0",
-        "ftrrtf/rollbar-notifier": "dev-master"
+        "ftrrtf/rollbar-notifier": "^2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.8",
@@ -38,12 +38,5 @@
         "branch-alias": {
             "dev-master": "1.0-dev"
         }
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/devalto/rollbar-notifier",
-            "no-api": true
-        }
-    ]
+    }
 }
