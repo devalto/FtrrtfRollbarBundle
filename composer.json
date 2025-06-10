@@ -15,7 +15,7 @@
         "symfony/framework-bundle": "^2.7.3|^3.0|^4.0",
         "symfony/security-bundle": "^2.7.3|^3.0|^4.0",
         "symfony/expression-language": "^2.7.3|^3.0|^4.0",
-        "ftrrtf/rollbar-notifier": "dev-master"
+        "ftrrtf/rollbar-notifier": "dev-master@dev"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.8",
