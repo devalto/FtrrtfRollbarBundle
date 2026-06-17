@@ -17,12 +17,12 @@
         <service id="ftrrtf_rollbar.environment" class="%ftrrtf_rollbar.environment.class%">
             <argument>%ftrrtf_rollbar.environment.options%</argument>
             <call method="setRequest">
-                <argument type="service" id="request" strict="false" on-invalid="ignore" />
+                <argument type="service" id="request" on-invalid="ignore" />
             </call>
         </service>
 
         <service id="ftrrtf_rollbar.notifier" class="%ftrrtf_rollbar.notifier.class%">
-            <argument type="service" id="ftrrtf_rollbar.environment" strict="false"/>
+            <argument type="service" id="ftrrtf_rollbar.environment" on-invalid="ignore"/>
             <argument type="service" id="ftrrtf_rollbar.transport" />
             <argument>%ftrrtf_rollbar.notifier.server.options%</argument>
         </service>
