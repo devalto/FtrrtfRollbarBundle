@@ -3,4 +3,4 @@ ftrrtf_rollbar:
         server:
             transport:
                 type: agent
-                agent_log_location: %kernel.logs_dir%/%kernel.environment%.rollbar
+                agent_log_location: "%kernel.logs_dir%/%kernel.environment%.rollbar"

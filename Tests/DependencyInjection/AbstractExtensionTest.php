@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
-abstract class AbstractExtensionTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractExtensionTest extends \PHPUnit\Framework\TestCase
 {
     private static $containerCache = array();
     

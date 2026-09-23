@@ -11,6 +11,8 @@ use Ftrrtf\RollbarBundle\Helper\UserHelper;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Symfony\Component\Console\Event\ConsoleErrorEvent;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
@@ -77,21 +79,20 @@ class RollbarListenerSpec extends ObjectBehavior
         $this->getException()->shouldReturn(null);
     }
 
-    function it_reports_exception_on_console_error(Notifier $notifier, \Exception $exception, ConsoleErrorEvent $event)
+    function it_reports_exception_on_console_error(Notifier $notifier)
     {
-        $event->getError()->willReturn($exception);
+        $exception = new \RuntimeException('boom');
 
         $notifier->reportException($exception)->shouldBeCalled();
-        $this->onConsoleError($event);
+        $this->onConsoleError(new ConsoleErrorEvent(new ArrayInput([]), new NullOutput(), $exception));
     }
 
-    function it_reports_php_errors_on_console_error(Notifier $notifier, ConsoleErrorEvent $event)
+    function it_reports_php_errors_on_console_error(Notifier $notifier)
     {
         $error = new \TypeError('boom');
-        $event->getError()->willReturn($error);
 
         $notifier->reportException($error)->shouldBeCalled();
-        $this->onConsoleError($event);
+        $this->onConsoleError(new ConsoleErrorEvent(new ArrayInput([]), new NullOutput(), $error));
     }
 
     function it_reports_exception_on_kernel_response(Notifier $notifier, \Exception $exception, ResponseEvent $event)

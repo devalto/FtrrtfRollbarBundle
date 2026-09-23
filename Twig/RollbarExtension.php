@@ -5,11 +5,13 @@ namespace Ftrrtf\RollbarBundle\Twig;
 use Ftrrtf\RollbarBundle\Helper\UserHelper;
 use Ftrrtf\RollbarBundle\Provider\CheckIgnoreFunctionProviderInterface;
 use Ftrrtf\RollbarBundle\Provider\TransformPayloadFunctionProviderInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Rollbar twig extension.
  */
-class RollbarExtension extends \Twig_Extension
+class RollbarExtension extends AbstractExtension
 {
     /**
      * @var array
@@ -65,7 +67,7 @@ class RollbarExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction(
+            new TwigFunction(
                 'rollbarjs',
                 array($this, 'getInitRollbarCode'),
                 array(

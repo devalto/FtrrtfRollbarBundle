@@ -5,7 +5,7 @@ namespace Ftrrtf\RollbarBundle\Tests\DependencyInjection;
 use Ftrrtf\RollbarBundle\DependencyInjection\Configuration;
 use Symfony\Component\Config\Definition\Processor;
 
-class ConfigurationTest extends \PHPUnit_Framework_TestCase
+class ConfigurationTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException

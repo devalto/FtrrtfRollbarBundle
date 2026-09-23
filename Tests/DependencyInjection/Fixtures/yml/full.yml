@@ -5,9 +5,9 @@ ftrrtf_rollbar:
             batch_size: 50
             transport:
                 type: curl
-                access_token: %rollbar_server_access_token%
+                access_token: "%rollbar_server_access_token%"
         client:
-            access_token: %rollbar_client_access_token%
+            access_token: "%rollbar_client_access_token%"
             source_map_enabled: true
             code_version: somehash
             guess_uncaught_frames: true

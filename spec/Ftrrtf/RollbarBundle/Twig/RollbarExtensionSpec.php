@@ -8,7 +8,7 @@ use Ftrrtf\RollbarBundle\Helper\UserHelper;
 use Ftrrtf\RollbarBundle\Provider\CheckIgnoreFunctionProviderInterface;
 use Ftrrtf\RollbarBundle\Twig\RollbarExtension;
 use PhpSpec\ObjectBehavior;
-use Twig_Extension as TwigExtension;
+use Twig\Extension\AbstractExtension as TwigExtension;
 
 /**
  * @mixin RollbarExtension
