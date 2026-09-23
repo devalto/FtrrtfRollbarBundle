@@ -4,7 +4,6 @@ namespace Ftrrtf\RollbarBundle\Tests\DependencyInjection;
 
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamWrapper;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\ExpressionLanguage\Expression;
 
@@ -54,6 +53,12 @@ class FtrrtfRollbarExtensionTest extends AbstractExtensionTest
                 '%ftrrtf_rollbar.environment.options%',
             )
         );
+        $this->assertEquals(
+            array(
+                array('setRequestStack', array(new Reference('request_stack'))),
+            ),
+            $container->getDefinition('ftrrtf_rollbar.environment')->getMethodCalls()
+        );
     }
 
     public function testServerNotifier()
@@ -73,7 +78,7 @@ class FtrrtfRollbarExtensionTest extends AbstractExtensionTest
         $this->assertDICConstructorArguments(
             $container->getDefinition('ftrrtf_rollbar.notifier'),
             array(
-                new Reference('ftrrtf_rollbar.environment', ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, false),
+                new Reference('ftrrtf_rollbar.environment'),
                 new Reference('ftrrtf_rollbar.transport'),
                 '%ftrrtf_rollbar.notifier.server.options%',
             )
@@ -118,12 +123,8 @@ class FtrrtfRollbarExtensionTest extends AbstractExtensionTest
                         'method' => 'onKernelRequest',
                     ),
                     array(
-                        'event' => 'console.command',
-                        'method' => 'onConsoleCommand',
-                    ),
-                    array(
-                        'event' => 'console.exception',
-                        'method' => 'onConsoleException',
+                        'event' => 'console.error',
+                        'method' => 'onConsoleError',
                     ),
                 ),
             )

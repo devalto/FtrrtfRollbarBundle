@@ -5,11 +5,10 @@ namespace Ftrrtf\RollbarBundle\EventListener;
 use Ftrrtf\Rollbar\ErrorHandler;
 use Ftrrtf\Rollbar\Notifier;
 use Ftrrtf\RollbarBundle\Helper\UserHelper;
-use Symfony\Component\Console\Event\ConsoleCommandEvent;
-use Symfony\Component\Console\Event\ConsoleExceptionEvent;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\Console\Event\ConsoleErrorEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -35,7 +34,7 @@ class RollbarListener
     protected $authorizationChecker;
 
     /**
-     * @var \Exception
+     * @var \Throwable|null
      */
     protected $exception;
 
@@ -83,9 +82,9 @@ class RollbarListener
     /**
      * Register error handler.
      *
-     * @param GetResponseEvent $event
+     * @param RequestEvent $event
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event)
     {
         $this->errorHandler->registerErrorHandler($this->notifier);
         $this->errorHandler->registerShutdownHandler($this->notifier);
@@ -94,40 +93,37 @@ class RollbarListener
     /**
      * Save exception.
      *
-     * @param GetResponseForExceptionEvent $event
+     * @param ExceptionEvent $event
      */
-    public function onKernelException(GetResponseForExceptionEvent $event)
+    public function onKernelException(ExceptionEvent $event)
     {
         // Skip HTTP exception
-        if ($event->getException() instanceof HttpException) {
+        if ($event->getThrowable() instanceof HttpException) {
             return;
         }
 
-        $this->setException($event->getException());
+        $this->setException($event->getThrowable());
     }
 
     /**
-     * @param ConsoleCommandEvent $event
+     * Report the error of a console command.
+     *
+     * The console application catches the error itself and renders it, so a PHP
+     * exception handler never sees it: this event is the only hook.
+     *
+     * @param ConsoleErrorEvent $event
      */
-    public function onConsoleCommand(ConsoleCommandEvent $event)
+    public function onConsoleError(ConsoleErrorEvent $event)
     {
-        $this->errorHandler->registerExceptionHandler($this->notifier);
-    }
-
-    /**
-     * @param ConsoleExceptionEvent $event
-     */
-    public function onConsoleException(ConsoleExceptionEvent $event)
-    {
-        $this->notifier->reportException($event->getException());
+        $this->notifier->reportException($event->getError());
     }
 
     /**
      * Wrap exception with additional info.
      *
-     * @param FilterResponseEvent $event
+     * @param ResponseEvent $event
      */
-    public function onKernelResponse(FilterResponseEvent $event)
+    public function onKernelResponse(ResponseEvent $event)
     {
         if ($this->getException()) {
             $this->notifier->reportException($this->getException());
@@ -158,7 +154,7 @@ class RollbarListener
     }
 
     /**
-     * @return \Exception
+     * @return \Throwable|null
      */
     public function getException()
     {
@@ -166,7 +162,7 @@ class RollbarListener
     }
 
     /**
-     * @param \Exception|null $exception
+     * @param \Throwable|null $exception
      */
     public function setException($exception)
     {

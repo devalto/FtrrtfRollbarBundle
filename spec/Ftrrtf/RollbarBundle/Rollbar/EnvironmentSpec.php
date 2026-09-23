@@ -6,6 +6,7 @@ use Ftrrtf\Rollbar\Environment as BaseEnvironment;
 use Ftrrtf\RollbarBundle\Rollbar\Environment;
 use PhpSpec\ObjectBehavior;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Kernel;
 
 /**
@@ -24,6 +25,39 @@ class EnvironmentSpec extends ObjectBehavior
         $this->setRequest($request);
 
         $this->getRequest()->shouldReturn($request);
+    }
+
+    function it_returns_null_when_there_is_no_request()
+    {
+        $this->getRequest()->shouldReturn(null);
+    }
+
+    function it_returns_the_master_request_of_the_request_stack(RequestStack $requestStack, Request $request)
+    {
+        $requestStack->getMasterRequest()->willReturn($request);
+
+        $this->setRequestStack($requestStack);
+
+        $this->getRequest()->shouldReturn($request);
+    }
+
+    function it_returns_null_when_the_request_stack_is_empty(RequestStack $requestStack)
+    {
+        $requestStack->getMasterRequest()->willReturn(null);
+
+        $this->setRequestStack($requestStack);
+
+        $this->getRequest()->shouldReturn(null);
+    }
+
+    function it_prefers_the_request_set_explicitly(RequestStack $requestStack, Request $stacked, Request $explicit)
+    {
+        $requestStack->getMasterRequest()->willReturn($stacked);
+
+        $this->setRequestStack($requestStack);
+        $this->setRequest($explicit);
+
+        $this->getRequest()->shouldReturn($explicit);
     }
 
     function it_returns_additional_request_data_when_put_request_is_used()

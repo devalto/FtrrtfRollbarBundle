@@ -16,13 +16,13 @@
 
         <service id="ftrrtf_rollbar.environment" class="%ftrrtf_rollbar.environment.class%">
             <argument>%ftrrtf_rollbar.environment.options%</argument>
-            <call method="setRequest">
-                <argument type="service" id="request" on-invalid="ignore" />
+            <call method="setRequestStack">
+                <argument type="service" id="request_stack" />
             </call>
         </service>
 
         <service id="ftrrtf_rollbar.notifier" class="%ftrrtf_rollbar.notifier.class%">
-            <argument type="service" id="ftrrtf_rollbar.environment" on-invalid="ignore"/>
+            <argument type="service" id="ftrrtf_rollbar.environment"/>
             <argument type="service" id="ftrrtf_rollbar.transport" />
             <argument>%ftrrtf_rollbar.notifier.server.options%</argument>
         </service>
@@ -36,8 +36,7 @@
             <tag name="kernel.event_listener" event="kernel.exception" method="onKernelException" priority="-100" />
             <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse" priority="-200" />
             <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" />
-            <tag name="kernel.event_listener" event="console.command" method="onConsoleCommand" />
-            <tag name="kernel.event_listener" event="console.exception" method="onConsoleException" />
+            <tag name="kernel.event_listener" event="console.error" method="onConsoleError" />
         </service>
     </services>
 </container>
